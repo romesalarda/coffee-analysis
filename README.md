@@ -10,7 +10,7 @@
 py -m venv venv
 ```
 
-2. Ensure you active the environment
+2. Ensure you activate the environment
 ```
 venv\Scripts\Activate.ps1
 ```
