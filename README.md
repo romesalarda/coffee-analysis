@@ -19,7 +19,7 @@ Prior to using this software, please install the following packages:
 - tzdata: 2025.2
 - matplotlib: 3.10.3
 
-These packages are requied for the critical functioning of this software.
+These packages are required for the critical functioning of this software.
 
 Install them using ```pip install -r requirements.txt``` after cloning the repository
 
