@@ -15,7 +15,6 @@ Hathem
 Michael
 Matthew
 Rome
-Johnas??
 
 ## Licence
 
