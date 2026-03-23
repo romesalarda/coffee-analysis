@@ -48,9 +48,17 @@ pip install -r "requiremes.txt"
 ## Running Tests
 
 ## Maintainers
+Hathem
+Michael
+Matthew
+Rome
 
 ## Licence
 
 ## Authors
+Hathem
+Michael
+Matthew
+Rome
 
 ## Acknowledgements
