@@ -23,6 +23,5 @@ Hathem
 Michael
 Matthew
 Rome
-Johnas??
 
 ## Acknowledgements
