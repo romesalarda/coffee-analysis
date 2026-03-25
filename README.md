@@ -51,9 +51,9 @@ A successfull output should provide you a PDF file with all the necessary data f
 
 To run tests run this command
 ```bash
-pytest tests/graph_tests.py
+pytest tests/graph_test.py
 
-pytest tests/demo_tests.py
+pytest tests/demo_test.py
 ```
 
 ## Maintainers
