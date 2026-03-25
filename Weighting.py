@@ -15,6 +15,7 @@ def get_scoring(df):
     total_score += other_nums.mean(axis=1)
     return total_score
 
+'''Gets the score for each country by grouping them'''
 def get_country_score(df):
     totals = (df.groupby('country_of_origin')['final_score']
               .mean()
