@@ -135,6 +135,31 @@ class PieChart(BaseGraph):
                ):
         self.ax.pie(values, labels=labels)
 
+class HeatMap(BaseGraph):
+
+    def build(self, 
+               x: typing.Iterable[typing.Any], 
+               y: typing.Iterable[typing.Any], 
+               data: typing.Iterable[typing.Any]
+               ):
+        im = self.ax.imshow(data, aspect='auto', origin='lower')
+
+        # Set ticks
+        self.ax.set_xticks(range(len(x)))
+        self.ax.set_yticks(range(len(y)))
+
+        # Set labels
+        self.ax.set_xticklabels(x, rotation=45, ha='right')
+        self.ax.set_yticklabels(y)
+
+        # Optional: colorbar (if not already handled)
+        self.fig.colorbar(im, ax=self.ax)
+
+        for i in range(len(y)):
+            for j in range(len(x)):
+                text = self.ax.text(j, i, f"{data[i, j]:.2f}",
+                            ha="center", va="center", color="w")
+
 if __name__ == "__main__":
     x = ['a', 'b', 'c']
     y = [1, 2, 3]
