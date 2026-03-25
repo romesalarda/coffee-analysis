@@ -1,4 +1,4 @@
-# coffee-analysis
+# Coffee-analysis
 
 ## Description
 
@@ -6,46 +6,55 @@ This code analyses a database of coffee suppliers, to create a few visual graphs
 
 The code returns the top 5 suppliers based on these criteria.
 
-## Pre-requisites
-Prior to using this software, please install the following packages:
-- contourpy: 1.3.2
-- cycler: 0.12.1
-- fonttools: 4.58.2
-- kiwisolver: 1.4.8
-- numpy: 2.2.6
-- packaging: 25.0
-- pandas: 2.3.0
-- pillow: 11.2.1
-- pyparsing: 3.2.3
-- python-dateutil: 2.9.0.post0
-- pytz: 2025.2
-- six: 1.17.0
-- tzdata: 2025.2
-- matplotlib: 3.10.3
-
-These packages are required for the critical functioning of this software.
-
-Install them using ```pip install -r requirements.txt``` after cloning the repository
-
 ## Installation
 1. Create a virtual environment
-```
+```bash
 py -m venv venv
 ```
 
 2. Ensure you activate the environment
-```
+For windows
+```bash
 venv\Scripts\Activate.ps1
 ```
 
+For other
+```bash
+venv\Scripts\activate
+```
+or 
+```bash
+venv\Scripts\activate.bat
+```
+
 3. Install requirements
+Either using
+```bash
+python3 -m pip install -r "requirements.txt"
 ```
-pip install -r "requiremes.txt"
+or 
+```bash
+py -m pip install -r "requirements.txt"
 ```
+whichever version of python you are using
 
 ## Usage
 
+In the command line in the current directory where this README.md file is, run:
+```bash
+python3 main.py
+```
+
+A successfull output should provide you a PDF file with all the necessary data from the data provided
+
 ## Running Tests
+
+To run tests run this command
+```bash
+pytest tests/graph_tests.py
+
+pytest tests/demo_tests.py
+```
 
 ## Maintainers
 Hathem
