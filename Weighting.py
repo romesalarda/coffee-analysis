@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import Filtering as filtering
+from Filtering import getListOfCountries
+
 
 def get_scoring(df):
     total_score = pd.Series(0, index=df.index)
@@ -12,8 +15,9 @@ def get_scoring(df):
     total_score += other_nums.sum(axis=1)
     return total_score
 
-df = pd.read_csv("data/simplified_coffee_ratings.csv")
-df['final_score'] = get_scoring(df)
-
-for score in df['final_score']:
-    print(score)
+def get_country_score(df):
+    totals = (df.groupby('country_of_origin')['final_score']
+              .mean()
+              .sort_values(ascending=False)
+              .head(10))
+    return list(totals.items())
