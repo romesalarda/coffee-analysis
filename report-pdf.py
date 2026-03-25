@@ -1,7 +1,7 @@
 import pymupdf
 from datetime import date
 
-def generate_report(body, images, output_file):
+def generate_report(body1, images, output_file):
 
     # convert the first image into a pdf file
     jpg = pymupdf.open(images[0])
