@@ -1,5 +1,8 @@
 import pytest
 import matplotlib.pyplot as plt
+import matplotlib
+
+matplotlib.use('Agg')  # Use a non-interactive backend for testing to avoid GUI issues
 
 from render import BaseGraph, BarGraph, ScatterGraph, PieChart
 
@@ -18,9 +21,7 @@ def test_base_graph():
     assert graph.ax.get_xlabel() == "X-axis"
     assert graph.ax.get_ylabel() == "Y-axis"
 
-    graph.show()
-
-    # graph.nuke()
+    plt.close()
 
 def test_bar_chart():
     graph = BarGraph()
@@ -28,9 +29,8 @@ def test_bar_chart():
     y = [1, 2, 3]
     graph.define_figure()
     graph.build(x, y)
-    graph.show()
 
-    # graph.nuke()
+    plt.close()
 
 def test_scatter_graph():
     graph = ScatterGraph()
@@ -38,9 +38,8 @@ def test_scatter_graph():
     y = [2, 3, 5, 7, 11]
     graph.define_figure()
     graph.build(x, y)
-    graph.show()
 
-    # graph.nuke()
+    plt.close()
 
 def test_pie_chart():
     graph = PieChart()
@@ -48,6 +47,6 @@ def test_pie_chart():
     values = [30, 50, 20]
     graph.define_figure()
     graph.build(labels, values)
-    graph.show()
-    
+
+    plt.close()
     
