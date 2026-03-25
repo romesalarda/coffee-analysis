@@ -1,0 +1,56 @@
+import pandas as pd
+
+'''Removes rows that have na in specific columns'''
+def filterNAColumn(df, listOfColumns):
+    if df is None:
+        raise ValueError("df cannot be None")
+    for column in listOfColumns:
+        if column not in df.columns:
+            raise ValueError("Column: " + column + " does not exist")
+    clean_df = df.dropna(subset=listOfColumns)
+    return clean_df
+
+'''Gets a list of countries in the frame'''
+def getListOfCountries(df):
+    if df is None:
+        raise ValueError("df cannot be None")
+    df_country = df['country_of_origin']
+    df_country2 = df_country.drop_duplicates(inplace=False)
+    return df_country2
+
+'''filter by the number of producers'''
+def filterByNumOfProducers(df, minNumOfProducers):
+    if df is None:
+        raise ValueError("df cannot be None")
+    elif minNumOfProducers < 1:
+        raise ValueError("minNumOfProducers cannot be less than 1")
+    countries = getListOfCountries(df)
+    for country in countries:
+        df2 = df[df['country_of_origin'] == country]
+        df3 = df2.drop_duplicates(subset=['farm_name'])
+        numOfProducers = len(df3)
+        if numOfProducers < minNumOfProducers:
+            df = df[~(df['country_of_origin'] == country)]
+    return df
+
+'''Filter by a value that the column must have'''
+def filterByColumnValue(df, column, value):
+    if df is None:
+        raise ValueError("df cannot be None")
+    elif column not in df.columns:
+        raise ValueError("column not found")
+    elif value not in df[column].values:
+        raise ValueError("value not found")
+    df = df[df[column] == value]
+    return df
+
+df = pd.read_csv("data/simplified_coffee_ratings.csv")
+df2 = filterNAColumn(df,
+                     ['country_of_origin', 'processing_method', 'aroma',
+                      'flavor','body','uniformity','cupper_points'])
+df3 = filterByNumOfProducers(df2, 3)
+df4 = filterByColumnValue(df3,'processing_method',"Washed / Wet")
+df5 = df4['country_of_origin'].drop_duplicates(inplace=False)
+
+for country in df5:
+    print(country)
