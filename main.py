@@ -5,6 +5,7 @@ if __name__ == "__main__":
 
     from Weighting import get_scoring
     from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn
+    from generatePdf import generate_report
 
     df = pd.read_csv("data/simplified_coffee_ratings.csv")
     df2 = filterNAColumn(df,
@@ -18,13 +19,16 @@ if __name__ == "__main__":
     df4['final_score'] = get_scoring(df4)
     top_countries = df4.groupby('country_of_origin')['final_score'].mean().nlargest(10).index.tolist()
 
+    # set save dir
+    BarGraph.define_working_directory("temp")
+
     # create bar graph of top 10 countries by score
     bar_graph = BarGraph()
     bar_graph.define_figure()
     bar_graph.define_graph_metadata(title="Top 10 Countries by Coffee Score", x_label="Country", y_label="Average Score")
     bar_graph.build(top_countries, df4.groupby('country_of_origin')['final_score'].mean().loc[top_countries].values)
-    # bar_graph.save_graph("top_countries_bar.png")   
-    bar_graph.show()
+    bar_graph.save_graph("top_countries_bar.png")
+    # bar_graph.show()
 
     # top 10 countries by aroma
     # top_countries_aroma = df4.groupby('country_of_origin')['aroma'].mean().nlargest(10).index.tolist()
@@ -45,3 +49,5 @@ if __name__ == "__main__":
     # scatter_graph_flavor.build(top_countries_flavor, top_countries_flavor_values)
     # scatter_graph_flavor.show()
     # scatter_graph_flavor.save_graph("top_countries_flavor.png")
+
+    generate_report(f"The best country to buy coffee from is <b>{top_countries[0]}</b>.\nThis answer was reached by taking an <b> average </b> of each countries local suppliers - weighted according to customer preferences.", [bar_graph.WORKING_DIR + "/top_countries_bar.png"], "report.pdf")
