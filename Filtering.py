@@ -43,14 +43,3 @@ def filterByColumnValue(df, column, value):
         raise ValueError("value not found")
     df = df[df[column] == value]
     return df
-
-df = pd.read_csv("data/simplified_coffee_ratings.csv")
-df2 = filterNAColumn(df,
-                     ['country_of_origin', 'processing_method', 'aroma',
-                      'flavor','body','uniformity','cupper_points'])
-df3 = filterByNumOfProducers(df2, 3)
-df4 = filterByColumnValue(df3,'processing_method',"Washed / Wet")
-df5 = df4['country_of_origin'].drop_duplicates(inplace=False)
-
-for country in df5:
-    print(country)
