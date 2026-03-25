@@ -15,5 +15,5 @@ def get_scoring(df):
 df = pd.read_csv("data/simplified_coffee_ratings.csv")
 df['final_score'] = get_scoring(df)
 
-for score in df['final_score']:
-    print(score)
+# for score in df['final_score']:
+    # print(score)

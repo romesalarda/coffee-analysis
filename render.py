@@ -104,11 +104,18 @@ class BaseGraph:
         '''
         self.ax, self.fig = None, None
 
+    def close(self):
+        '''
+        Closes the current figure to free up memory. This is particularly important when generating multiple graphs in a loop or when working with large datasets, as it helps prevent memory leaks and ensures that resources are properly released.
+        '''
+        if self.fig:
+            plt.close(self.fig)
+            self.fig = None
+            self.ax = None
 class BarGraph(BaseGraph):
 
     def build(self, x: typing.Iterable[typing.Any], y: typing.Iterable[typing.Any]):
         self.ax.bar(x, y)
-        self.show()
 
 
 class ScatterGraph(BaseGraph):
@@ -118,7 +125,6 @@ class ScatterGraph(BaseGraph):
                y: typing.Iterable[typing.Any]
                ):
         self.ax.scatter(x, y)
-        self.show()
 
 
 class PieChart(BaseGraph):
@@ -128,7 +134,6 @@ class PieChart(BaseGraph):
                values: typing.Iterable[typing.Any]
                ):
         self.ax.pie(values, labels=labels)
-        self.show()
 
 if __name__ == "__main__":
     x = ['a', 'b', 'c']
