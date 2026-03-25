@@ -1,5 +1,5 @@
 name: run-unit-tests
-
+working-directory: ./tests
 on: push
 
 jobs: 
