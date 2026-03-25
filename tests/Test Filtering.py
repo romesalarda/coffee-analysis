@@ -6,7 +6,7 @@ import pandas as pd
 
 @pytest.fixture(scope='module')
 def csv():
-    df = pd.read_csv("./test_data/test_coffee_ratings.csv")
+    df = pd.read_csv("tests/test_data/test_coffee_ratings.csv")
     yield df
 
 def test_getCountries(csv):
