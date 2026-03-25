@@ -22,8 +22,6 @@ def get_country_score(df):
               .sort_values(ascending=False)
               .head(10))
     return list(totals.items())
-df = pd.read_csv("data/simplified_coffee_ratings.csv")
-df['final_score'] = get_scoring(df)
 
 # for score in df['final_score']:
     # print(score)

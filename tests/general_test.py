@@ -1,9 +1,13 @@
+import os.path
+
 import pytest
 import pandas as pd
 import Filtering
 import Weighting
 
 filepath = "tests/test_data/test_coffee_ratings.csv"
+
+
 df = pd.read_csv(filepath)
 
 def test_filterNAColumn():
