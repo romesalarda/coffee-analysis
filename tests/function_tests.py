@@ -1,4 +1,4 @@
 import pytest
 
-def placeholder_test():
+def test_placeholder():
     assert True 
