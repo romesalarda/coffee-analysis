@@ -5,9 +5,12 @@ def filterNAColumn(df, listOfColumns):
     """
     Remove producers that have NA values in specific columns
 
-    :param df: The current dataframe
-    :param listOfColumns: The list of columns to remove based on NA values
-    :return: A dataframe without NA values in those columns
+    Args:
+        df (DataFrame): The current dataframe
+        listOfColumns (list[string): The list of columns to remove based on NA values
+
+    Returns:
+        DataFrame: A dataframe without NA values in those columns
     """
     if df is None:
         raise ValueError("df cannot be None")
@@ -22,8 +25,11 @@ def getListOfCountries(df):
     """
     Returns a list of countries in the frame
 
-    :param df: The current dataframe
-    :return: A dataframe of countries in the frame
+    Args:
+        df (DataFrame): The current dataframe
+
+    Returns:
+        DataFrame: A dataframe of countries in the frame
     """
     if df is None:
         raise ValueError("df cannot be None")
@@ -35,9 +41,13 @@ def getListOfCountries(df):
 def filterByNumOfProducers(df, minNumOfProducers):
     """
     Remove countries who do not have enough producers.
-    :param df: The current dataframe
-    :param minNumOfProducers: The minimum number of producers for operations in a country.
-    :return: The filtered dataframe
+
+    Args:
+        df (DataFrame): The current dataframe
+        minNumOfProducers (int): The minimum number of producers for operations in a country.
+
+    Returns:
+        :return: The filtered dataframe
     """
     if df is None:
         raise ValueError("df cannot be None")
@@ -56,10 +66,13 @@ def filterByColumnValue(df, column, value):
     """
     Filter by a value that the column must have
 
-    :param df: The current dataframe
-    :param column: The column that the value is in.
-    :param value: The value that you want the column to have
-    :return: A new dataframe, containing only those elements that were had the deried value in the column
+    Args:
+        df (DataFrame): The current dataframe
+        column (string): The column that the value is in.
+        value (String): The value that you want the column to have
+
+    Returns:
+        DataFrame: A new dataframe, containing only those elements that were had the deried value in the column
     """
     if df is None:
         raise ValueError("df cannot be None")
@@ -74,9 +87,12 @@ def removeLittleProducers(df, minimumProduction = 500):
     """
     Removes producers that do not produce enough kg of beans
 
-    :param df: The current dataframe
-    :param minimumProduction: The minimum amount of beans each producer must produce to be sustainable.
-    :return: A new dataframe without producers who cannot produce enough beans.
+    Args:
+        df (DataFrame): The current dataframe
+        minimumProduction (int): The minimum amount of beans each producer must produce to be sustainable.
+
+    Returns:
+        DataFrame: A new dataframe without producers who cannot produce enough beans.
     """
     listOfNums = df['bag_weight'].values.tolist()
     listOfConverted = []
