@@ -16,7 +16,7 @@ def get_scoring(df, otherColumnMultiplier = 1):
     return total_score
 
 
-def get_country_score(df, producer_per_country, number_of_countries):
+def get_country_score(df, producer_per_country = 10, number_of_countries = 10):
     totals = (df.groupby('country_of_origin')['final_score']
               .nlargest(producer_per_country)
               .groupby(level=0)
