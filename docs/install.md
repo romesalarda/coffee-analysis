@@ -1,19 +1,27 @@
+# Installation 
+
+## Download 
+Download and unzip latest release
+
+## Open terminal
+Open the folder in the terminal
+
 ## Create a virtual environment
 ```bash
-py -m venv venv
+python3 -m venv venv
 ```
 ## Ensure you activate the environment
-For windows
-```bash
-venv\Scripts\Activate.ps1
-```
-For other
+For windows terminal
 ```bash
 venv\Scripts\activate
 ```
+For other
+```bash
+source venv/Scripts/activate
+```
 or 
 ```bash
-venv\Scripts\activate.bat
+source venv/Scripts/activate
 ```
 ## Install requirements
 Either using
