@@ -1,9 +1,9 @@
 import pandas as pd
 
 if __name__ == "__main__":
-    from render import BarGraph, ScatterGraph, PieChart
+    from render import BarGraph, ScatterGraph, PieChart, HeatMap
 
-    from Weighting import get_scoring
+    from Weighting import get_scoring, get_country_score
     from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn
     from generatePdf import generate_report
 
@@ -17,7 +17,10 @@ if __name__ == "__main__":
     
     # need to get best 10 countries by score
     df4['final_score'] = get_scoring(df4)
-    top_countries = df4.groupby('country_of_origin')['final_score'].mean().nlargest(10).index.tolist()
+    results = get_country_score(df4)
+    countries = [i[0] for i in results]
+    scores = [i[1] for i in results]
+    top_countries = countries
 
     # set save dir
     BarGraph.define_working_directory("temp")
@@ -26,9 +29,9 @@ if __name__ == "__main__":
     bar_graph = BarGraph()
     bar_graph.define_figure()
     bar_graph.define_graph_metadata(title="Top 10 Countries by Coffee Score", x_label="Country", y_label="Average Score")
-    bar_graph.build(top_countries, df4.groupby('country_of_origin')['final_score'].mean().loc[top_countries].values)
+    bar_graph.build(top_countries, scores)
     bar_graph.save_graph("top_countries_bar.png")
-    # bar_graph.show()
+    bar_graph.show()
 
     # top 10 countries by aroma
     # top_countries_aroma = df4.groupby('country_of_origin')['aroma'].mean().nlargest(10).index.tolist()
@@ -69,4 +72,13 @@ if __name__ == "__main__":
                    """
 
 
-    generate_report(report_body, [bar_graph.WORKING_DIR + "/top_countries_bar.png"], "report.pdf")
+    heat_map = HeatMap()
+    heat_map.define_figure()
+    heat_map.define_graph_metadata(title="Correlation Heatmap of Coffee Attributes")
+    # top 10 countries on y and then on x is the categories, each value is the score for that attribute for that country
+    # 
+    categories = ['aroma', 'flavor', 'body', 'uniformity']
+    heat_map.build(categories, top_countries, df4.groupby('country_of_origin')[categories].mean().loc[top_countries].values)
+    heat_map.show()
+
+    generate_report(f"The best country to buy coffee from is <b>{top_countries[0]}</b>.\nThis answer was reached by taking an <b> average </b> of each countries local suppliers - weighted according to customer preferences.", [bar_graph.WORKING_DIR + "/top_countries_bar.png"], "report.pdf")

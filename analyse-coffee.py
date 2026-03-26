@@ -4,18 +4,19 @@ from matplotlib import pyplot as plt
 import Filtering as filtering
 import Weighting as weighting
 
-def setup_dataFrame(df):
+def setup_dataFrame(df, min_producers = 3):
     df2 = filtering.filterNAColumn(df, ['country_of_origin', 'processing_method', 'aroma',
                       'flavor','body','uniformity','cupper_points'])
-    df3 = filtering.filterByNumOfProducers(df2, 3)
+    df3 = filtering.filterByNumOfProducers(df2, min_producers)
     df4 = filtering.filterByColumnValue(df3, 'processing_method', "Washed / Wet")
-    score_column = weighting.get_scoring(df4)
-    df4['final_score'] = score_column
-    return df4
+    df5 = filtering.removeLittleProducers(df4)
+    score_column = weighting.get_scoring(df5)
+    df5['final_score'] = score_column
+    return df5
 
-def getBestCoffee(df):
+def getBestCoffee(df, per_country_producers = 10, number_of_countries = 10):
     df4 = setup_dataFrame(df)
-    packaging = weighting.get_country_score(df4)
+    packaging = weighting.get_country_score(df4, per_country_producers, number_of_countries)
     return packaging
 
 def getBestProducerInCountry(df, country):
@@ -27,25 +28,10 @@ def getBestProducerInCountry(df, country):
     return producer, score
 
 df = pd.read_csv("data/simplified_coffee_ratings.csv")
-df10 = getBestCoffee(df)
+df10 = getBestCoffee(df, 10, 10)
 for (country, score) in df10:
     print(country, score)
 print("Best Producer")
 (producer, score) = getBestProducerInCountry(df, df10[0][0])
 print(producer, score)
-df1 = df[df['country_of_origin'] == 'United States']
-df2 = df1[['owner_1', 'flavor', 'cupper_points']]
 
-fig, ax = plt.subplots()
-df2.plot('flavor', 'cupper_points', kind='scatter', ax=ax)
-
-clean_df = df2.dropna(subset=['flavor','cupper_points'])
-m, b = np.polyfit(clean_df['flavor'], clean_df['cupper_points'], 1)
-
-ax.plot(clean_df['flavor'], m * clean_df['flavor'] + b, color='blue', label = f'Fit: y={m:.2f}x+{b:.2f}')
-
-for k, v in df1.iterrows():
-    ax.annotate(v['owner_1'], xy=(v['flavor'],v['cupper_points']))
-
-plt.legend()
-plt.show()
