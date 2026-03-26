@@ -17,6 +17,7 @@ if __name__ == "__main__":
     parser.add_argument('--weight_species', type=float, default=1.0, help='Weight for species score')
     parser.add_argument('--weight_other', type=float, default=1.0, help='Weight for other scores')
     parser.add_argument('--cwd', type=str, default='temp/', help='Current working directory for saving outputs')
+    parser.add_argument('--min_production', type=int, default=500, help='Minimum number of bags * weight for a producer to be included in the analysis (kg)')
 
     args = parser.parse_args()
 
@@ -27,7 +28,7 @@ if __name__ == "__main__":
     df3 = filterByNumOfProducers(df2, args.min_producers)
     df4 = filterByColumnValue(df3,'processing_method',"Washed / Wet")
     df5 = df4['country_of_origin'].drop_duplicates(inplace=False)
-    df6 = removeLittleProducers(df4)
+    df6 = removeLittleProducers(df4, minimumProduction=args.min_production)
     # need to get best 10 countries by score
     df6['final_score'] = get_scoring(df6, 
                                     uniformity_multiplier=args.weight_uniformity,
