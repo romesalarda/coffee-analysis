@@ -23,7 +23,7 @@ def generate_report(body1, images, output_file):
 
     # write body
     rect = pymupdf.Rect(60, 150, 535, 800)
-    cover_page.insert_htmlbox(rect, body1, css="* {font-family: halv;font-size:12px;}")
+    cover_page.insert_htmlbox(rect, body1, css="* {font-family: halv; font-size:12px;}")
 
     # delete the initial image
     pdf.delete_page(-1)
@@ -38,4 +38,4 @@ def generate_report(body1, images, output_file):
     pdf.save(output_file)
 
 # run the report
-generate_report(f"<b>THis was a report {52}</b> THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}", ["temp/test_image.jpg", "temp/test_image.jpg", "temp/test_image.jpg"], "report.pdf")
+# generate_report(f"<b>THis was a report {52}</b> THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}THis was a report {52}", ["temp/test_image.jpg", "temp/test_image.jpg", "temp/test_image.jpg"], "report.pdf")
