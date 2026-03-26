@@ -3,10 +3,17 @@ import pytest
 import Filtering
 import Filtering as Filter
 import pandas as pd
+import os
 
 @pytest.fixture(scope='module')
 def csv():
-    df = pd.read_csv("tests/test_data/test_coffee_ratings.csv")
+    cwd = os.getcwd()
+    if "tests" in cwd:
+        filepath = "test_data/test_coffee_ratings.csv"
+    else:
+        filepath = "tests/test_data/test_coffee_ratings.csv"
+    filepath = os.path.join(cwd, filepath)
+    df = pd.read_csv(filepath)
     yield df
 
 def test_getCountries(csv):

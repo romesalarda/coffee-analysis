@@ -3,7 +3,7 @@ import pandas as pd
 if __name__ == "__main__":
     from render import BarGraph, ScatterGraph, PieChart, HeatMap
 
-    from Weighting import get_scoring
+    from Weighting import get_scoring, get_country_score
     from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn
     from generatePdf import generate_report
 
@@ -17,7 +17,10 @@ if __name__ == "__main__":
     
     # need to get best 10 countries by score
     df4['final_score'] = get_scoring(df4)
-    top_countries = df4.groupby('country_of_origin')['final_score'].mean().nlargest(10).index.tolist()
+    results = get_country_score(df4)
+    countries = [i[0] for i in results]
+    scores = [i[1] for i in results]
+    top_countries = countries
 
     # set save dir
     BarGraph.define_working_directory("temp")
@@ -26,9 +29,9 @@ if __name__ == "__main__":
     bar_graph = BarGraph()
     bar_graph.define_figure()
     bar_graph.define_graph_metadata(title="Top 10 Countries by Coffee Score", x_label="Country", y_label="Average Score")
-    bar_graph.build(top_countries, df4.groupby('country_of_origin')['final_score'].mean().loc[top_countries].values)
+    bar_graph.build(top_countries, scores)
     bar_graph.save_graph("top_countries_bar.png")
-    # bar_graph.show()
+    bar_graph.show()
 
     # top 10 countries by aroma
     # top_countries_aroma = df4.groupby('country_of_origin')['aroma'].mean().nlargest(10).index.tolist()

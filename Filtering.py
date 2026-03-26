@@ -43,3 +43,18 @@ def filterByColumnValue(df, column, value):
         raise ValueError("value not found")
     df = df[df[column] == value]
     return df
+
+def removeLittleProducers(df, minimumProduction = 500):
+    listOfNums = df['bag_weight'].values.tolist()
+    listOfConverted = []
+    for num in listOfNums:
+        numString = num.split(' ')
+        if numString[1] == "kg":
+            listOfConverted.append( int(numString[0]) )
+        elif numString[1] == "lbs":
+            listOfConverted.append( int(numString[0]) / 2.205 )
+        else:
+            listOfConverted.append( int(numString[0])  )
+    df['final_weight'] = df['number_of_bags'] * listOfConverted
+    df = df[df['final_weight'] >= minimumProduction]
+    return df
