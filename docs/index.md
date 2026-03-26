@@ -16,8 +16,8 @@ python3 main.py
 A successfull output should provide you a PDF file with all the necessary data from the data provided
 
 ## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+    ...
+    main.py    # The main file.
+    data/
+        simplified_coffee_ratings.csv  # The file being analysed.
+        ...    
