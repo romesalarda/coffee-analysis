@@ -4,6 +4,7 @@ import pandas as pd
 def filterNAColumn(df, listOfColumns):
     """
     Remove producers that have NA values in specific columns
+
     :param df: The current dataframe
     :param listOfColumns: The list of columns to remove based on NA values
     :return: A dataframe without NA values in those columns
@@ -20,6 +21,7 @@ def filterNAColumn(df, listOfColumns):
 def getListOfCountries(df):
     """
     Returns a list of countries in the frame
+
     :param df: The current dataframe
     :return: A dataframe of countries in the frame
     """
@@ -53,6 +55,7 @@ def filterByNumOfProducers(df, minNumOfProducers):
 def filterByColumnValue(df, column, value):
     """
     Filter by a value that the column must have
+
     :param df: The current dataframe
     :param column: The column that the value is in.
     :param value: The value that you want the column to have
@@ -70,6 +73,7 @@ def filterByColumnValue(df, column, value):
 def removeLittleProducers(df, minimumProduction = 500):
     """
     Removes producers that do not produce enough kg of beans
+
     :param df: The current dataframe
     :param minimumProduction: The minimum amount of beans each producer must produce to be sustainable.
     :return: A new dataframe without producers who cannot produce enough beans.
