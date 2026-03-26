@@ -1,13 +1,19 @@
-# Welcome to MkDocs
+# Welcome to Coffee Analysis
+## Description
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+This code analyses a database of coffee suppliers, to create a few visual graphs and rank the coffee suppliers based on flavor, aroma, uniformity and a few other criteria. 
 
-## Commands
+The code returns the top 5 suppliers based on these criteria.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+## Usage
+Ensure there is a file named 'simplified_coffee_ratings.csv' within the 'data' folder of the 'coffee-analysis' directory.
+
+Open the folder 'coffee-analysis' in a terminal, then run:
+```bash
+python3 main.py
+```
+
+A successfull output should provide you a PDF file with all the necessary data from the data provided
 
 ## Project layout
 
