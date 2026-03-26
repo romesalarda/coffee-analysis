@@ -71,14 +71,16 @@ if __name__ == "__main__":
                       <h3> Methodology </h3>\n
                       First the data is parsed and filtered to remove suppliers with key missing or invalid values in key data fields. This is done so that only real data is used in the process and not any kind of guessing or interpolation between similar suppliers.\n <br>
                       Next we removed countries with less than {3} suppliers from the dataset. This was done as these kinds of countries are prone to generating biased data - and since they are less valuable as trading partners.
+                      We then filter out suppliers who produce less than {500}kg of beans so that only those who produce a useful amount are considered<br>
                       And finally, the last filter we apply is to ensure that the coffee uses a <i>Washed/Wet</i> processing method. This is a requirement identified as necessary to ensure consistency across coffee outlets. <br> <br>
                       A coffee's quality is described in the dataset as a list of scores in the following categories: <br><i>(aroma,flavor,aftertaste,acidity,body,balance,uniformity,clean_cup,sweetness,cupper_points,moisture)</i><br>
                       We apply a weighted sum to each supplier across each of these categories such that for supplier i: <br>
                       <i>score<sub>i</sub> = (w<sub>a</sub> . aroma<sub>i</sub>) + (w<sub>f</sub> . flavour<sub>i</sub>) + (w<sub>u</sub> . uniformity<sub>i</sub>) + Σ<sub>other</sub> (w<sub>other</sub> + other<sub>i</sub>) <br>
                       and w<sub>a</sub>=<b>{1.0}</b>, w<sub>f</sub>=<b>{1.0}</b>, w<sub>u</sub>=<b>{1.0}</b>, w<sub>other</sub>=<b>{1.0}</b></i> <br> <br>
 
-                      At this point an average of each countries to {20} top suppliers is taken. These are the values used in determining which country is the best to trade with.
+                      At this point an average of each countries top <i>{20}</i> suppliers is taken. These are the values used in determining which country is the best to trade with.
                       <h3> Results </h3>\n
+
                    """
     
     heat_map = HeatMap()
@@ -99,4 +101,7 @@ if __name__ == "__main__":
     world_heat_map.build(dict(zip(top_countries, top_countries_scores)))
     world_heat_map.save_graph("world_heatmap.png")
 
-    generate_report(f"The best country to buy coffee from is <b>{top_countries[0]}</b>.\nThis answer was reached by taking an <b> average </b> of each countries local suppliers - weighted according to customer preferences.", [bar_graph.WORKING_DIR + "/top_countries_bar.png"], "report.pdf")
+    graphs = ["temp/top_countries_bar.png", "temp/correlation_heatmap.png",  "temp/world_heatmap.png"]
+
+
+    generate_report(report_body, graphs, "report.pdf")
