@@ -100,4 +100,7 @@ if __name__ == "__main__":
     world_heat_map.build(dict(zip(top_countries, top_countries_scores)))
     world_heat_map.save_graph("world_heatmap.png")
 
-    generate_report(f"The best country to buy coffee from is <b>{top_countries[0]}</b>.\nThis answer was reached by taking an <b> average </b> of each countries local suppliers - weighted according to customer preferences.", [bar_graph.WORKING_DIR + "/top_countries_bar.png"], "report.pdf")
+    graphs = ["temp/top_countries_bar.png", "temp/correlation_heatmap.png",  "temp/world_heatmap.png"]
+
+
+    generate_report(report_body, graphs, "report.pdf")
