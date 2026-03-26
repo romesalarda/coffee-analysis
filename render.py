@@ -4,16 +4,21 @@ import pandas as pd
 import typing
 import os
 
-# 1. plotting categories i.e. (favour, aroma, uniformity, body) bar chart 
-# 2. scatter graph of flavour vs cupper points
-# 3. annotate the scatter graph with the owner of the coffee
-
 class BaseGraph:
-
+    '''
+    Base class for all graph types. Provides common functionality for defining the figure, saving the graph, and displaying it.
+    Subclasses should implement the build method to define how the graph is constructed based on the provided data.
+    '''
     WORKING_DIR = "graphs"
 
     def __init__(self, description=None, *args, **kwargs):
+        '''
+        Initializes the BaseGraph instance with optional description and graph type.
 
+        Args:
+            description: Optional; A brief description of the graph's purpose or content. This can be used for documentation or logging purposes.
+            graph_type: Optional; A string indicating the type of graph (e.g., 'bar', 'scatter', 'pie', 'heatmap'). This can be used to determine default settings or file naming conventions when saving the graph.
+        '''
         self.description = description
         self.graph_type = kwargs.get('graph_type', 'bar')
 
@@ -23,7 +28,10 @@ class BaseGraph:
         self.ax = None
 
     @classmethod
-    def define_working_directory(cls, path):
+    def define_working_directory(cls, path: typing.Optional[str] = None):
+        '''
+        Define the working directory for saving graphs. If no path is provided, it defaults to "graphs". If the specified directory does not exist, it will be created.
+        '''
         cls.WORKING_DIR = path
         if not os.path.exists(cls.WORKING_DIR):
             os.makedirs(cls.WORKING_DIR)
@@ -97,13 +105,6 @@ class BaseGraph:
             self.ax.clear()
             self.fig.clf()
 
-    def nuke(self):
-        '''
-        Removes the current figure and axes, effectively resetting the graph instance to its initial state. 
-        This can be useful when you want to completely reset the graph instance without creating a new one.
-        '''
-        self.ax, self.fig = None, None
-
     def close(self):
         '''
         Closes the current figure to free up memory. This is particularly important when generating multiple graphs in a loop or when working with large datasets, as it helps prevent memory leaks and ensures that resources are properly released.
@@ -133,6 +134,14 @@ class PieChart(BaseGraph):
                labels: typing.Iterable[typing.Any], 
                values: typing.Iterable[typing.Any]
                ):
+        '''
+        Builds a pie chart using the provided labels and values.
+
+        Args:
+            labels: An iterable containing the labels for each slice of the pie chart.
+            values: An iterable containing the corresponding values for each label, which determine the size of each slice in the pie chart.
+        '''
+
         self.ax.pie(values, labels=labels)
 
 class HeatMap(BaseGraph):
@@ -140,25 +149,32 @@ class HeatMap(BaseGraph):
     def build(self, 
                x: typing.Iterable[typing.Any], 
                y: typing.Iterable[typing.Any], 
-               data: typing.Iterable[typing.Any]
+               data: typing.Iterable[typing.Any],
+               add_annotations: bool = True
                ):
+        '''
+        Builds a heatmap using the provided x and y labels and the corresponding data values.
+
+        Args:
+            x: An iterable containing the labels for the x-axis (columns).
+            y: An iterable containing the labels for the y-axis (rows).
+            data: A 2D iterable (e.g., list of lists or numpy array) containing the values to be displayed in the heatmap. The shape of data should match the lengths of x and y.
+            add_annotations: Optional; If True, adds annotations to each cell in the heatmap displaying the corresponding data value. Default is True.
+        '''
         im = self.ax.imshow(data, aspect='auto', origin='lower')
 
-        # Set ticks
         self.ax.set_xticks(range(len(x)))
         self.ax.set_yticks(range(len(y)))
 
-        # Set labels
         self.ax.set_xticklabels(x, rotation=45, ha='right')
         self.ax.set_yticklabels(y)
 
-        # Optional: colorbar (if not already handled)
         self.fig.colorbar(im, ax=self.ax)
 
-        for i in range(len(y)):
-            for j in range(len(x)):
-                text = self.ax.text(j, i, f"{data[i, j]:.2f}",
-                            ha="center", va="center", color="w")
+        if add_annotations:
+            for i in range(len(y)):
+                for j in range(len(x)):
+                    self.ax.text(j, i, f"{data[i, j]:.2f}",ha="center", va="center", color="w")
 
 if __name__ == "__main__":
     x = ['a', 'b', 'c']
