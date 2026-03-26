@@ -4,7 +4,7 @@ if __name__ == "__main__":
     from render import BarGraph, ScatterGraph, PieChart, HeatMap, WorldHeatMap, BaseGraph
 
     from Weighting import get_scoring, get_country_score
-    from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn
+    from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn, removeLittleProducers
     from generatePdf import generate_report
 
     df = pd.read_csv("data/simplified_coffee_ratings.csv")
@@ -14,10 +14,10 @@ if __name__ == "__main__":
     df3 = filterByNumOfProducers(df2, 3)
     df4 = filterByColumnValue(df3,'processing_method',"Washed / Wet")
     df5 = df4['country_of_origin'].drop_duplicates(inplace=False)
-    
+    df6 = removeLittleProducers(df4)
     # need to get best 10 countries by score
-    df4['final_score'] = get_scoring(df4)
-    results = get_country_score(df4)
+    df6['final_score'] = get_scoring(df6)
+    results = get_country_score(df6)
     countries = [i[0] for i in results]
     scores = [i[1] for i in results]
     top_countries = countries
@@ -34,8 +34,8 @@ if __name__ == "__main__":
 
     categories_for_bar = ['aroma', 'flavor', 'body', 'uniformity']
     for category in categories_for_bar:
-        top_countries_category = df4.groupby('country_of_origin')[category].mean().nlargest(10).index.tolist()
-        top_countries_category_values = df4.groupby('country_of_origin')[category].mean().loc[top_countries_category].values
+        top_countries_category = df6.groupby('country_of_origin')[category].mean().nlargest(10).index.tolist()
+        top_countries_category_values = df6.groupby('country_of_origin')[category].mean().loc[top_countries_category].values
         bar_graph = BarGraph()
         bar_graph.define_figure()
         bar_graph.define_graph_metadata(title=f"Top 10 Countries by {category.capitalize()}", x_label="Country", y_label=f"Average {category.capitalize()} Score")
@@ -65,15 +65,15 @@ if __name__ == "__main__":
     heat_map.define_graph_metadata(title="Correlation Heatmap of Coffee Attributes")
 
     categories = ['aroma', 'flavor', 'body', 'uniformity']
-    heat_map.build(categories, top_countries, df4.groupby('country_of_origin')[categories].mean().loc[top_countries].values)
+    heat_map.build(categories, top_countries, df6.groupby('country_of_origin')[categories].mean().loc[top_countries].values)
     heat_map.save_graph("correlation_heatmap.png")
 
     world_heat_map = WorldHeatMap()
     world_heat_map.define_figure()
     world_heat_map.define_graph_metadata(title="World Heatmap of Coffee Scores")
 
-    top_countries = df4.groupby('country_of_origin')['final_score'].mean().nlargest(50).index.tolist()
-    top_countries_scores = df4.groupby('country_of_origin')['final_score'].mean().loc[top_countries].values
+    top_countries = df6.groupby('country_of_origin')['final_score'].mean().nlargest(50).index.tolist()
+    top_countries_scores = df6.groupby('country_of_origin')['final_score'].mean().loc[top_countries].values
 
     world_heat_map.build(dict(zip(top_countries, top_countries_scores)))
     world_heat_map.save_graph("world_heatmap.png")
