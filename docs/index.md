@@ -34,7 +34,7 @@ python main.py [OPTIONS]
 | `--cwd` | string | `temp/` | Directory for saving output files |
 
 ### Examples
-
+ 
 Run with defaults:
 ```bash
 python main.py
