@@ -1,1 +1,13 @@
-site_name: My Docs
+site_name: name
+
+nav:
+  - Overview: index.md
+  - API Reference: api.md
+
+plugins:
+  - search
+  - mkdocstrings:
+    handlers:
+      python: 
+        options:
+          docstring_style: google
