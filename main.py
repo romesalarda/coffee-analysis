@@ -75,8 +75,8 @@ if __name__ == "__main__":
                       A coffee's quality is described in the dataset as a list of scores in the following categories: <br><i>(aroma,flavor,aftertaste,acidity,body,balance,uniformity,clean_cup,sweetness,cupper_points,moisture)</i><br>
                       We apply a weighted sum to each supplier across each of these categories such that for supplier i: <br>
                       <i>score<sub>i</sub> = (w<sub>a</sub> . aroma<sub>i</sub>) + (w<sub>f</sub> . flavour<sub>i</sub>) + (w<sub>u</sub> . uniformity<sub>i</sub>) + Σ<sub>other</sub> (w<sub>other</sub> + other<sub>i</sub>) <br>
-                      and w<sub>a</sub>=<b>{args.weight_aroma}</b>, w<sub>f</sub>=<b>{args.weight_flavor}</b>, w<sub>u</sub>=<b>{args.weight_uniformity}</b>, w<sub>other</sub>=<b>{weight_other}</b></i> <br> <br>
-                      In addition, suppliers producing robusta beans have their scores multiplied by {args.species_multiplier}.<br>
+                      and w<sub>a</sub>=<b>{args.weight_aroma}</b>, w<sub>f</sub>=<b>{args.weight_flavor}</b>, w<sub>u</sub>=<b>{args.weight_uniformity}</b>, w<sub>other</sub>=<b>{args.weight_other}</b></i> <br> <br>
+                      In addition, suppliers producing robusta beans have their scores multiplied by {args.weight_species}.<br>
                       At this point an average of each countries to {10} top suppliers is taken. These are the values used in determining which country is the best to trade with.
                       <h3> Results </h3>\n
                       The results for this calculation are shown in the figures below.
