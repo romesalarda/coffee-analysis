@@ -3,7 +3,7 @@ import pandas as pd
 import Filtering
 import Weighting
 
-filepath = "tests/test_data/test_coffee_ratings.csv"
+filepath = "/tests/test_data/test_coffee_ratings.csv"
 df = pd.read_csv(filepath)
 
 def test_filterNAColumn():
@@ -64,7 +64,7 @@ def test_high_uniformity_bonus():
         "species": ["Arabica"], "uniformity": [10.0], "flavor": [6.0],
         "aroma": [6.0], "acidity": [6.0], "body": [6.0], "balance": [6.0],
         "aftertaste": [6.0], "sweetness": [6.0], "clean_cup": [6.0],
-        "cupper_points": [6.0], "moisture": [0.1]
+        "cupper_points": [6.0], "moisture": [0.1], "number_of_bags": [1]
     })
     low = high.copy()
     low["uniformity"] = 6.0  
@@ -76,7 +76,7 @@ def test_high_flavor_bonus():
         "species": ["Arabica"], "uniformity": [10.0], "flavor": [8.0],
         "aroma": [6.0], "acidity": [6.0], "body": [6.0], "balance": [6.0],
         "aftertaste": [6.0], "sweetness": [6.0], "clean_cup": [6.0],
-        "cupper_points": [6.0], "moisture": [0.1]
+        "cupper_points": [6.0], "moisture": [0.1], "number_of_bags": [1]
     })
     low = high.copy()
     low["flavor"] = 6.0  
@@ -87,7 +87,7 @@ def test_high_aroma_bonus():
         "species": ["Arabica"], "uniformity": [10.0], "flavor": [8.0],
         "aroma": [7.5], "acidity": [6.0], "body": [6.0], "balance": [6.0],
         "aftertaste": [6.0], "sweetness": [6.0], "clean_cup": [6.0],
-        "cupper_points": [6.0], "moisture": [0.1]
+        "cupper_points": [6.0], "moisture": [0.1], "number_of_bags": [1]
     })
     low = high.copy()
     low["aroma"] = 6.0  
