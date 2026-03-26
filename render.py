@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
 import pandas as pd
 import typing
@@ -91,7 +92,7 @@ class BaseGraph:
             path = os.path.join(self.WORKING_DIR, file_name)
 
         # plt.savefig(path)
-        self.fig.savefig(path)
+        self.fig.savefig(path, dpi=300, bbox_inches='tight')
         print(f"Graph saved to {path}")
 
     def show(self):
@@ -250,6 +251,12 @@ class WorldHeatMap(BaseGraph):
                 facecolor=cmap(norm(value)),  # normalize
                 edgecolor=self.edge_color
             )
+
+        sm = mpl.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+
+        cbar = plt.colorbar(sm, ax=ax, orientation='horizontal', pad=0.05)
+        cbar.set_label('Final Score')
         
 
 if __name__ == "__main__":
