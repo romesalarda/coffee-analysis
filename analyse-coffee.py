@@ -9,9 +9,10 @@ def setup_dataFrame(df, min_producers = 3):
                       'flavor','body','uniformity','cupper_points'])
     df3 = filtering.filterByNumOfProducers(df2, min_producers)
     df4 = filtering.filterByColumnValue(df3, 'processing_method', "Washed / Wet")
-    score_column = weighting.get_scoring(df4)
-    df4['final_score'] = score_column
-    return df4
+    df5 = filtering.removeLittleProducers(df4)
+    score_column = weighting.get_scoring(df5)
+    df5['final_score'] = score_column
+    return df5
 
 def getBestCoffee(df, per_country_producers = 10, number_of_countries = 10):
     df4 = setup_dataFrame(df)
