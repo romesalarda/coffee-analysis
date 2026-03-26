@@ -162,7 +162,7 @@ class HeatMap(BaseGraph):
                y: typing.Iterable[typing.Any], 
                data: typing.Iterable[typing.Any],
                add_annotations: bool = True,
-               normalise: bool = True
+               normalise: bool = False
                ):
         '''
         Builds a heatmap using the provided x and y labels and the corresponding data values.
