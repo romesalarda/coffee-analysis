@@ -1,19 +1,32 @@
+# Installation 
+
+## Download 
+Download and unzip latest release
+
+## Open the Folder in Terminal
+
+Right-click the folder "coffee-analysis" and select the option for your OS:
+
+- **Windows** — Hold Shift + right-click → "Open in Terminal" or "Open PowerShell window here"
+- **Mac** — Right-click → "New Terminal at Folder" *(if missing: System Settings → Keyboard → Shortcuts → Services → enable it)*
+- **Linux** — Right-click → "Open in Terminal" *(exact wording varies by file manager)*
+
 ## Create a virtual environment
 ```bash
-py -m venv venv
+python3 -m venv venv
 ```
 ## Ensure you activate the environment
-For windows
-```bash
-venv\Scripts\Activate.ps1
-```
-For other
+For windows terminal
 ```bash
 venv\Scripts\activate
 ```
+For other
+```bash
+source venv/Scripts/activate
+```
 or 
 ```bash
-venv\Scripts\activate.bat
+source venv/Scripts/activate
 ```
 ## Install requirements
 Either using

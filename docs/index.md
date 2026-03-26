@@ -6,6 +6,8 @@ This code analyses a database of coffee suppliers, to create a few visual graphs
 The code returns the top 5 suppliers based on these criteria.
 
 ## Usage
+After installation (see Installation)
+
 Ensure there is a file named 'simplified_coffee_ratings.csv' within the 'data' folder of the 'coffee-analysis' directory.
 
 Open the folder 'coffee-analysis' in a terminal, then run:
