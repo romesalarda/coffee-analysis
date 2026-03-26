@@ -1,4 +1,5 @@
 import pandas as pd
+import argparse
 
 if __name__ == "__main__":
     from render import BarGraph, ScatterGraph, PieChart, HeatMap, WorldHeatMap, BaseGraph
@@ -7,23 +8,42 @@ if __name__ == "__main__":
     from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn, removeLittleProducers
     from generatePdf import generate_report
 
-    df = pd.read_csv("data/simplified_coffee_ratings.csv")
+    parser = argparse.ArgumentParser(description='Process coffee data and generate report.')
+    parser.add_argument('--input', type=str, default='data/simplified_coffee_ratings.csv', help='Path to the input CSV file')
+    parser.add_argument('--min_producers', type=int, default=3, help='Minimum number of producers for a country to be included')
+    parser.add_argument('--weight_aroma', type=float, default=1.0, help='Weight for aroma score')
+    parser.add_argument('--weight_flavor', type=float, default=1.0, help='Weight for flavor score')
+    parser.add_argument('--weight_uniformity', type=float, default=1.0, help='Weight for uniformity score')
+    parser.add_argument('--weight_species', type=float, default=1.0, help='Weight for species score')
+    parser.add_argument('--weight_other', type=float, default=1.0, help='Weight for other scores')
+    parser.add_argument('--cwd', type=str, default='temp/', help='Current working directory for saving outputs')
+
+    args = parser.parse_args()
+
+    df = pd.read_csv(args.input)
     df2 = filterNAColumn(df,
                         ['country_of_origin', 'processing_method', 'aroma',
                         'flavor','body','uniformity','cupper_points'])
-    df3 = filterByNumOfProducers(df2, 3)
+    df3 = filterByNumOfProducers(df2, args.min_producers)
     df4 = filterByColumnValue(df3,'processing_method',"Washed / Wet")
     df5 = df4['country_of_origin'].drop_duplicates(inplace=False)
     df6 = removeLittleProducers(df4)
     # need to get best 10 countries by score
-    df6['final_score'] = get_scoring(df6)
+    df6['final_score'] = get_scoring(df6, 
+                                    uniformity_multiplier=args.weight_uniformity,
+                                    flavor_multiplier=args.weight_flavor,
+                                    aroma_multiplier=args.weight_aroma,
+                                    species_multiplier=args.weight_species,
+                                    otherColumnMultiplier=args.weight_other
+                                    )
+                                     
     results = get_country_score(df6)
     countries = [i[0] for i in results]
     scores = [i[1] for i in results]
     top_countries = countries
 
     # set save dir
-    BaseGraph.define_working_directory("temp")
+    BaseGraph.define_working_directory(args.cwd)
 
     # create bar graph of top 10 countries by score
     bar_graph = BarGraph()
@@ -72,7 +92,7 @@ if __name__ == "__main__":
     world_heat_map.define_figure()
     world_heat_map.define_graph_metadata(title="World Heatmap of Coffee Scores")
 
-    top_countries = df6.groupby('country_of_origin')['final_score'].mean().nlargest(50).index.tolist()
+    top_countries = df6.groupby('country_of_origin')['final_score'].mean().nlargest(10).index.tolist()
     top_countries_scores = df6.groupby('country_of_origin')['final_score'].mean().loc[top_countries].values
 
     world_heat_map.build(dict(zip(top_countries, top_countries_scores)))
