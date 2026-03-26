@@ -122,6 +122,10 @@ class BaseGraph:
             self.ax = None
 class BarGraph(BaseGraph):
 
+    def define_figure(self):
+        super().define_figure()
+        plt.xticks(rotation=45, ha='right')
+
     def build(self, x: typing.Iterable[typing.Any], y: typing.Iterable[typing.Any]):
         self.ax.bar(x, y)
 
