@@ -4,26 +4,27 @@ import Filtering as filtering
 from Filtering import getListOfCountries
 
 
-def get_scoring(df):
+def get_scoring(df, otherColumnMultiplier = 1):
     total_score = pd.Series(0, index=df.index)
     total_score += np.where(df['species'] == 'Robusta', 0.9, 1.0)
-    total_score += np.where(df['uniformity'] >= 8, df['uniformity'] * 1.75, df['uniformity'].fillna(0))
-    total_score += np.where(df['flavor'] >= 7.5, df['flavor'] * 1.5, df['flavor'].fillna(0))
-    total_score += np.where(df['aroma'] >= 7, df['aroma'] * 1.25, df['aroma'].fillna(0))
-    cols_to_exclude = ['species', 'uniformity', 'flavor', 'aroma','number_of_bags']
-    other_nums = df.drop(columns = cols_to_exclude).select_dtypes(include = [np.number])
-    total_score += other_nums.sum(axis=1)
+    total_score += np.where(df['uniformity'] >= 0, df['uniformity'] * 1.75, df['uniformity'].fillna(0))
+    total_score += np.where(df['flavor'] >= 0, df['flavor'] * 1.5, df['flavor'].fillna(0))
+    total_score += np.where(df['aroma'] >= 0, df['aroma'] * 1.25, df['aroma'].fillna(0))
+    cols_to_exclude = ['species', 'uniformity', 'flavor', 'aroma', 'number_of_bags']
+    other_nums = df.drop(columns=cols_to_exclude).select_dtypes(include=[np.number])
+    total_score += other_nums.sum(axis=1) * otherColumnMultiplier
     return total_score
+
 
 def get_country_score(df, producer_per_country, number_of_countries):
     totals = (df.groupby('country_of_origin')['final_score']
-        .nlargest(producer_per_country)
-        .groupby(level=0)
-        .mean()
-        .sort_values(ascending=False)
-        .head(number_of_countries)
-    )
+              .nlargest(producer_per_country)
+              .groupby(level=0)
+              .mean()
+              .sort_values(ascending=False)
+              .head(number_of_countries)
+              )
     return list(totals.items())
 
 # for score in df['final_score']:
-    # print(score)
+# print(score)
