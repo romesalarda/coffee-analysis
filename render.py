@@ -4,6 +4,12 @@ import pandas as pd
 import typing
 import os
 
+import cartopy.crs as ccrs
+import cartopy.io.shapereader as shpreader
+import matplotlib.cm as cm
+from matplotlib.colors import PowerNorm
+
+
 class BaseGraph:
     '''
     Base class for all graph types. Provides common functionality for defining the figure, saving the graph, and displaying it.
@@ -150,7 +156,8 @@ class HeatMap(BaseGraph):
                x: typing.Iterable[typing.Any], 
                y: typing.Iterable[typing.Any], 
                data: typing.Iterable[typing.Any],
-               add_annotations: bool = True
+               add_annotations: bool = True,
+               normalise: bool = True
                ):
         '''
         Builds a heatmap using the provided x and y labels and the corresponding data values.
@@ -160,7 +167,13 @@ class HeatMap(BaseGraph):
             y: An iterable containing the labels for the y-axis (rows).
             data: A 2D iterable (e.g., list of lists or numpy array) containing the values to be displayed in the heatmap. The shape of data should match the lengths of x and y.
             add_annotations: Optional; If True, adds annotations to each cell in the heatmap displaying the corresponding data value. Default is True.
+            normalise: Optional; If True, normalizes the data values to a range between 0 and 1 before plotting the heatmap. This can help improve the visual representation of the data, especially when there are large variations in the values. Default is True.
         '''
+
+        if normalise:
+            data = np.array(data)
+            data = (data - np.min(data)) / (np.max(data) - np.min(data)) if np.max(data) != np.min(data) else np.zeros_like(data)
+
         im = self.ax.imshow(data, aspect='auto', origin='lower')
 
         self.ax.set_xticks(range(len(x)))
@@ -175,6 +188,69 @@ class HeatMap(BaseGraph):
             for i in range(len(y)):
                 for j in range(len(x)):
                     self.ax.text(j, i, f"{data[i, j]:.2f}",ha="center", va="center", color="w")
+
+class WorldHeatMap(BaseGraph):
+
+    def __init__(self, description=None, *args, **kwargs):
+        '''
+        Initializes the WorldHeatMap instance with optional description and graph type.
+
+        Args:
+            description: Optional; A brief description of the graph's purpose or content. This can be used for documentation or logging purposes.
+            graph_type: Optional; A string indicating the type of graph (e.g., 'bar', 'scatter', 'pie', 'heatmap'). This can be used to determine default settings or file naming conventions when saving the graph.
+            colour_map: Optional; A string specifying the colormap to use for the heatmap. Default is 'inferno'. This can be any valid colormap recognized by matplotlib.
+            edge_color: Optional; A string specifying the color to use for the edges of the countries on the map. Default is 'black'.
+            resolution: Optional; A string specifying the resolution of the shapefile to use for the map. Default is '110m'. This can be '110m', '50m', or '10m' depending on the level of detail desired.
+            category: Optional; A string specifying the category of the shapefile to use for the map
+            name: Optional; A string specifying the name of the shapefile to use for the map. Default is 'admin_0_countries', which includes country boundaries.
+
+        '''
+        super().__init__(description, *args, **kwargs)
+
+        self.colour_map = self.kwargs.get('colour_map', 'inferno')
+        self.edge_color = self.kwargs.get('edge_color', 'black')
+        self.resolution = self.kwargs.get('resolution', '110m')
+        self.category = self.kwargs.get('category', 'cultural')
+        self.name = self.kwargs.get('name', 'admin_0_countries')
+        self.graph_type = 'world_heatmap'
+
+    def build(self, data: typing.Dict[str, float]):
+        '''
+        Builds a world heatmap using the provided data dictionary, 
+        where keys are country names and values are the corresponding scores or values to be visualized on the map.
+
+        Args:
+            data: A dictionary where the keys are country names (as they appear in the shapefile) and the values are the corresponding scores or values to be visualized on the map. 
+            The values will be used to determine the color intensity for each country on the heatmap.
+        '''
+        shpfilename = shpreader.natural_earth(
+            resolution=self.resolution,
+            category=self.category,
+            name=self.name
+        )
+
+        reader = shpreader.Reader(shpfilename)
+
+        # fig = plt.figure(figsize=(10, 5))
+        ax = plt.axes(projection=ccrs.PlateCarree())
+        ax.set_global()
+        ax.coastlines()
+
+        cmap = cm.get_cmap(self.colour_map)  # choose a colormap
+        norm = PowerNorm(gamma=0.5, vmin=min(data.values()), vmax=max(data.values()))
+
+        for record in reader.records():
+            name = record.attributes['NAME_LONG']
+
+            value = data.get(name, 0)
+
+            ax.add_geometries(
+                [record.geometry],
+                ccrs.PlateCarree(),
+                facecolor=cmap(norm(value)),  # normalize
+                edgecolor=self.edge_color
+            )
+        
 
 if __name__ == "__main__":
     x = ['a', 'b', 'c']
