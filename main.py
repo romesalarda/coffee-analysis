@@ -1,7 +1,7 @@
 import pandas as pd
 
 if __name__ == "__main__":
-    from render import BarGraph, ScatterGraph, PieChart
+    from render import BarGraph, ScatterGraph, PieChart, HeatMap
 
     from Weighting import get_scoring
     from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn
@@ -49,5 +49,14 @@ if __name__ == "__main__":
     # scatter_graph_flavor.build(top_countries_flavor, top_countries_flavor_values)
     # scatter_graph_flavor.show()
     # scatter_graph_flavor.save_graph("top_countries_flavor.png")
+
+    heat_map = HeatMap()
+    heat_map.define_figure()
+    heat_map.define_graph_metadata(title="Correlation Heatmap of Coffee Attributes")
+    # top 10 countries on y and then on x is the categories, each value is the score for that attribute for that country
+    # 
+    categories = ['aroma', 'flavor', 'body', 'uniformity']
+    heat_map.build(categories, top_countries, df4.groupby('country_of_origin')[categories].mean().loc[top_countries].values)
+    heat_map.show()
 
     generate_report(f"The best country to buy coffee from is <b>{top_countries[0]}</b>.\nThis answer was reached by taking an <b> average </b> of each countries local suppliers - weighted according to customer preferences.", [bar_graph.WORKING_DIR + "/top_countries_bar.png"], "report.pdf")
