@@ -1,7 +1,21 @@
 import pymupdf
 from datetime import date
 
-def generate_report(body1, images, output_file):
+def generate_report(body, images, output_file):
+
+    """
+
+    Generate a pdf report with body followed by a sequence of images to a given output file name.
+
+    Args:
+        body (str): The body of the report on the first page. Renders HTML.
+        images (list[string]): A list of file paths to images that will be included in the report.
+        output_file (str): The file name of the generated pdf.
+
+    Returns:
+        None
+
+    """
 
     # convert the first image into a pdf file
     jpg = pymupdf.open(images[0])
@@ -10,12 +24,12 @@ def generate_report(body1, images, output_file):
 
     # insert cover page with text
     cover_page = pdf.new_page(0, width = 595, height = 842)
-    cover_page.insert_text(pymupdf.Point(50, 100),
+    cover_page.insert_text(pymupdf.Point(60, 100),
                            "The Best Countries by Coffee Quality",
                            fontname = 'helv',
-                           fontsize = 20,
+                           fontsize = 24,
                            rotate = 0)
-    cover_page.insert_text(pymupdf.Point(400, 72),
+    cover_page.insert_text(pymupdf.Point(480, 68),
                            f"{date.today()}",
                            fontname = 'helv',
                            fontsize = 13,
@@ -23,7 +37,7 @@ def generate_report(body1, images, output_file):
 
     # write body
     rect = pymupdf.Rect(60, 150, 535, 800)
-    cover_page.insert_htmlbox(rect, body1, css="* {font-family: halv; font-size:12px;}")
+    cover_page.insert_htmlbox(rect, body, css="* {font-family: helv; font-size:12px;}")
 
     # delete the initial image
     pdf.delete_page(-1)
