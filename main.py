@@ -7,17 +7,20 @@ if __name__ == "__main__":
     from Weighting import get_scoring, get_country_score
     from Filtering import filterByColumnValue, filterByNumOfProducers, filterNAColumn, removeLittleProducers
     from generatePdf import generate_report
+    # flavour = 10/10 , unif = 8/10, aroma = 6/10, 5/10
 
     parser = argparse.ArgumentParser(description='Process coffee data and generate report.')
     parser.add_argument('--input', type=str, default='data/simplified_coffee_ratings.csv', help='Path to the input CSV file')
     parser.add_argument('--min_producers', type=int, default=3, help='Minimum number of producers for a country to be included')
-    parser.add_argument('--weight_aroma', type=float, default=1.0, help='Weight for aroma score')
-    parser.add_argument('--weight_flavor', type=float, default=1.0, help='Weight for flavor score')
-    parser.add_argument('--weight_uniformity', type=float, default=1.0, help='Weight for uniformity score')
-    parser.add_argument('--weight_species', type=float, default=1.0, help='Weight for species score')
-    parser.add_argument('--weight_other', type=float, default=1.0, help='Weight for other scores')
+    parser.add_argument('--weight_aroma', type=float, default=1.6, help='Weight for aroma score')
+    parser.add_argument('--weight_flavor', type=float, default=2, help='Weight for flavor score')
+    parser.add_argument('--weight_uniformity', type=float, default=1.8, help='Weight for uniformity score')
+    parser.add_argument('--weight_species', type=float, default=0.9, help='Weight for species score')
+    parser.add_argument('--weight_other', type=float, default=1.5, help='Weight for other scores')
     parser.add_argument('--cwd', type=str, default='temp/', help='Current working directory for saving outputs')
     parser.add_argument('--min_production', type=int, default=500, help='Minimum number of bags * weight for a producer to be included in the analysis (kg)')
+    parser.add_argument('--top-producers-per-country', type=int, default=10, help='Maximum number of top producers to include per country')
+    parser.add_argument('--num-top-countries', type=int, default=10, help='Number of top countries to include in the report')
 
     args = parser.parse_args()
 
@@ -38,7 +41,7 @@ if __name__ == "__main__":
                                     otherColumnMultiplier=args.weight_other
                                     )
                                      
-    results = get_country_score(df6)
+    results = get_country_score(df6, number_of_countries=args.num_top_countries, producer_per_country=args.top_producers_per_country)
     countries = [i[0] for i in results]
     scores = [i[1] for i in results]
     top_countries = countries
@@ -52,6 +55,7 @@ if __name__ == "__main__":
     bar_graph.define_graph_metadata(title="Top 10 Countries by Coffee Score", x_label="Country", y_label="Average Score")
     bar_graph.build(top_countries, scores)
     bar_graph.save_graph("top_countries_bar.png")
+
 
     categories_for_bar = ['aroma', 'flavor', 'body', 'uniformity']
     for category in categories_for_bar:
@@ -70,14 +74,14 @@ if __name__ == "__main__":
                       
                       <h3> Methodology </h3>\n
                       First the data is parsed and filtered to remove suppliers with key missing or invalid values in key data fields. This is done so that only real data is used in the process and not any kind of guessing or interpolation between similar suppliers.\n <br>
-                      Next we removed countries with less than {args.min_producers} suppliers from the dataset. This was done as these kinds of countries are prone to generating biased data - and since they are less valuable as trading partners.
+                      Next we removed countries with less than <b>{args.min_producers}</b> suppliers from the dataset. This was done as these kinds of countries are prone to generating biased data - and since they are less valuable as trading partners.
                       And finally, the last filter we apply is to ensure that the coffee uses a <i>Washed/Wet</i> processing method. This is a requirement identified as necessary to ensure consistency across coffee outlets. <br> <br>
                       A coffee's quality is described in the dataset as a list of scores in the following categories: <br><i>(aroma,flavor,aftertaste,acidity,body,balance,uniformity,clean_cup,sweetness,cupper_points,moisture)</i><br>
                       We apply a weighted sum to each supplier across each of these categories such that for supplier i: <br>
-                      <i>score<sub>i</sub> = (w<sub>a</sub> . aroma<sub>i</sub>) + (w<sub>f</sub> . flavour<sub>i</sub>) + (w<sub>u</sub> . uniformity<sub>i</sub>) + Σ<sub>other</sub> (w<sub>other</sub> + other<sub>i</sub>) <br>
+                      <i>score<sub>i</sub> = (w<sub>a</sub> . aroma<sub>i</sub>) + (w<sub>f</sub> . flavour<sub>i</sub>) + (w<sub>u</sub> . uniformity<sub>i</sub>) + Σ<sub>other</sub> (w<sub>other</sub> . other<sub>i</sub>) <br>
                       and w<sub>a</sub>=<b>{args.weight_aroma}</b>, w<sub>f</sub>=<b>{args.weight_flavor}</b>, w<sub>u</sub>=<b>{args.weight_uniformity}</b>, w<sub>other</sub>=<b>{args.weight_other}</b></i> <br> <br>
-                      In addition, suppliers producing robusta beans have their scores multiplied by {args.weight_species}.<br>
-                      At this point an average of each countries to {10} top suppliers is taken. These are the values used in determining which country is the best to trade with.
+                      In addition, suppliers producing robusta beans have their scores multiplied by <b>{args.weight_species}</b>.<br>
+                      At this point an average of each countries to <b>{args.top_producers_per_country}</b> top suppliers is taken. These are the values used in determining which country is the best to trade with.
                       <h3> Results </h3>\n
                       The results for this calculation are shown in the figures below.
                    """
