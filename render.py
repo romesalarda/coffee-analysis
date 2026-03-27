@@ -9,6 +9,7 @@ import cartopy.crs as ccrs
 import cartopy.io.shapereader as shpreader
 import matplotlib.cm as cm
 from matplotlib.colors import PowerNorm
+from pyparsing import col
 
 
 class BaseGraph:
@@ -162,7 +163,7 @@ class HeatMap(BaseGraph):
                y: typing.Iterable[typing.Any], 
                data: typing.Iterable[typing.Any],
                add_annotations: bool = True,
-               normalise: bool = False
+               normalise: bool = True
                ):
         '''
         Builds a heatmap using the provided x and y labels and the corresponding data values.
@@ -174,11 +175,10 @@ class HeatMap(BaseGraph):
             add_annotations: Optional; If True, adds annotations to each cell in the heatmap displaying the corresponding data value. Default is True.
             normalise: Optional; If True, normalizes the data values to a range between 0 and 1 before plotting the heatmap. This can help improve the visual representation of the data, especially when there are large variations in the values. Default is True.
         '''
-
         if normalise:
             data = np.array(data)
-            data = (data - np.min(data)) / (np.max(data) - np.min(data)) if np.max(data) != np.min(data) else np.zeros_like(data)
-
+            data = data / np.max(data, axis=0)
+            
         im = self.ax.imshow(data, aspect='auto', origin='lower')
 
         self.ax.set_xticks(range(len(x)))
