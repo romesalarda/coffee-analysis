@@ -5,6 +5,12 @@ nav:
   - Installation: install.md
   - API Reference: api.md
 
+theme:
+  name: material
+  palette:
+    primary: orange
+    accent: deep orange
+
 plugins:
   - search
   - mkdocstrings:
